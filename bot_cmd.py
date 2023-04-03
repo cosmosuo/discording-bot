@@ -3,9 +3,27 @@ from dotenv import load_dotenv
 import os
 from math import * 
 from discord.ext import commands 
-import random
+import openai
 
-magic_list = ["it is certain","It is decidely so","Without a doubt","Yes,definitely","You may rely on it","As i see it, yes","Most likely","Outlook is good","Yes","Signs point to yes","Reply hazy, try again","Ask again later","Better not tell you now","Cannot predict this now","Concentrate and ask again","Don't count on it","My reply is no","My sources say no","Outlook is not so good","Very doubtful"]
+load_dotenv("C_TOKEN")
+key = os.getenv("C_TOKEN")
+
+openai.api_key = key
+
+messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "can you help me"},
+        {"role": "assistant", "content": "bruh ok"},
+    ]
+
+def chat(inp):
+    messages.append({"role": "user", "content": inp})
+    response = openai.ChatCompletion.create(
+      model="gpt-3.5-turbo",
+      messages=messages,
+    )
+    messages.append(response.choices[0].message)
+    return response.choices[0].message.content
 
 #create intents
 intents = discord.Intents.default()
@@ -33,6 +51,10 @@ async def meth(ctx, *, arg):
 @bot.command(help="magic service provided")
 async def magic(ctx, *, arg):
    await ctx.send(str(random.choice(magic_list))) 
+
+@bot.command(help="bot that leads to another bot")
+async def ayah(ctx, *, arg):
+   await ctx.send(chat(arg)) 
 
 bot.run(token)
 
