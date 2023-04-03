@@ -2,6 +2,19 @@ import discord
 from dotenv import load_dotenv
 import os
 from math import * 
+import random
+
+
+user_cmd_count = {}
+og_value = 1
+db_value = 2*og_value
+
+
+def userCalling(user):
+    if user in user_cmd_count:
+        user_cmd_count[user] += 1
+    else:
+        user_cmd_count[user] = 1
 
 #create intents
 intents = discord.Intents.default()
@@ -20,14 +33,11 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-      if message.author.bot:
+      global db_value
+      global count
+      author = message.author
+      if author.bot:
              return
-      if message.content.startswith("!"):
-        cleanMsg = message.content[1:]
-        await message.channel.send("ew it's you again echo of :rolling_eyes: :raised_hand: " + cleanMsg + "'")
-      if message.content.startswith("meth "):
-        cleanMsg = message.content[4:]
-        await message.channel.send("want some of my crystal blue meth? pay me '"+ "$" + str(eval(cleanMsg)) + "'")        
-
+      
 #log in
 client.run(token)
