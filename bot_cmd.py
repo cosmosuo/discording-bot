@@ -4,6 +4,17 @@ import os
 from math import * 
 from discord.ext import commands 
 import openai
+import time 
+
+chat_timestamp = time.time()
+
+def resetConversationIfExpired():
+   global chat_timestamp
+   cur_time = time.time()
+   if cur_time - chat_timestamp > 300: #reset history message 
+      messages = messages[:3]
+      print("Resetting conversation history")
+   chat_timestamp = cur_time 
 
 load_dotenv("C_TOKEN")
 key = os.getenv("C_TOKEN")
@@ -47,10 +58,6 @@ async def echo(ctx, *, arg):
 @bot.command(help="a nice product for nice buyers")
 async def meth(ctx, *, arg):
    await ctx.send("want some of my crystal blue meth? pay me "+ "$" + str(eval(arg)))
-
-@bot.command(help="magic service provided")
-async def magic(ctx, *, arg):
-   await ctx.send(str(random.choice(magic_list))) 
 
 @bot.command(help="bot that leads to another bot")
 async def ayah(ctx, *, arg):
